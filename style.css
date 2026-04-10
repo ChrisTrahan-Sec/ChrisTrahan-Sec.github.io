@@ -84,3 +84,20 @@ main {
     color: #888;
     border-top: 1px solid #333;
 }
+
+.services-list {
+    text-align: center;
+}
+
+.service-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.service-card {
+    flex: 1 1 calc(33.333% - 40px); /* 3 cards per row with some spacing */
+    max-width: 300px;
+}
