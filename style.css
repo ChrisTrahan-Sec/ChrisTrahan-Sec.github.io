@@ -1,0 +1,86 @@
+/* Basic Reset & Global Styles */
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #121212; /* Dark background */
+    color: #e0e0e0;           /* Light grey text */
+    line-height: 1.6;
+}
+
+/* Header Styling */
+.main-header {
+    background-color: #1f1f1f;
+    padding: 40px 20px;
+    text-align: center;
+    border-bottom: 3px solid #007bff; /* A nice blue accent */
+}
+
+.main-header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+/* Main Content Styling */
+main {
+    max-width: 900px;
+    margin: 40px auto; /* Center the content */
+    padding: 0 20px;
+}
+
+.intro {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+/* Service Cards Styling - The "Switchboard" */
+.services-container {
+    display: flex; /* This puts the cards side-by-side */
+    gap: 30px;     /* This adds space between the cards */
+}
+
+.service-card {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 25px;
+    flex: 1; /* This makes both cards take up equal space */
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-5px); /* Lifts the card on hover */
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+}
+
+.service-card h3 {
+    color: #007bff;
+    margin-top: 0;
+}
+
+/* Button Styling */
+.btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Footer Styling */
+.main-footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 50px;
+    font-size: 0.9em;
+    color: #888;
+    border-top: 1px solid #333;
+}
