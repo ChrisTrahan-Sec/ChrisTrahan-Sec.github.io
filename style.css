@@ -125,3 +125,20 @@ main {
 .button:hover {
     background-color: #0056b3;
 }
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-size: 18px;
+}
+
+.landing-page {
+    text-align: center;
+}
+
+.button {
+    color: white;
+    font-weight: bold;
+}
