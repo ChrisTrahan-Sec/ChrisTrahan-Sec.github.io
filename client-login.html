@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Client Login / Create Account — QFW</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="landing-page">
+    <h2 class="qfw-title">QFW</h2>
+    <h1>Client Login</h1>
+    <div class="card">
+      <h3>Create an account</h3>
+      <p>Fill this form and click "Request Account". We'll create it for you and email credentials.</p>
+      <form id="requestForm">
+        <label for="name">Full name</label>
+        <input id="name" name="name" type="text" required />
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required />
+
+        <label for="notes">Notes (optional)</label>
+        <textarea id="notes" name="notes" rows="3"></textarea>
+
+        <button type="submit" class="button">Request Account</button>
+      </form>
+      <p class="small">If you prefer, call/text us and we'll set up the account for you.</p>
+    </div>
+    <p><a href="index.html" class="link">← Back to home</a></p>
+  </div>
+  <script>
+    const form = document.getElementById('requestForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const notes = form.notes.value.trim();
+      // MAILTO fallback (no backend required)
+      const subject = encodeURIComponent('Account request: ' + name);
+      const body = encodeURIComponent(
+        `Name: ${name}\nEmail: ${email}\nNotes: ${notes}\n\nPlease create a client account for this user.`
+      );
+      // Opens user's mail app — sends to admin@qfwllc.com
+      window.location.href = `mailto:admin@qfwllc.com?subject=${subject}&body=${body}`;
+      // -- Optional: send to backend API (uncomment when backend is ready) --
+      // try {
+      //   const res = await fetch('/api/request-account', {
+      //     method:'POST',
+      //     headers:{'Content-Type':'application/json'},
+      //     body: JSON.stringify({name,email,notes})
+      //   });
+      //   if(res.ok) alert('Request sent. We will create your account and email credentials.');
+      // } catch(err){ console.error(err); alert('Error sending request.'); }
+    });
+  </script>
+</body>
+</html>

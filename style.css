@@ -149,3 +149,20 @@ body {
     color: white;
     font-weight: bold;
 }
+.button {
+  display:inline-block;
+  padding:12px 18px;
+  margin:8px;
+  background:#0066cc;
+  color:#fff;
+  text-decoration:none;
+  border-radius:6px;
+  font-weight:600;
+}
+.client-cta { background:#00a86b; }
+.landing-page { max-width:900px; margin:40px auto; padding:16px; text-align:center; }
+.card { max-width:520px; margin:20px auto; padding:18px; border:1px solid #e3e3e3; border-radius:8px; text-align:left; background:#fff; }
+label { display:block; margin-top:12px; font-weight:600; }
+input, textarea { width:100%; padding:8px; margin-top:6px; border:1px solid #ccc; border-radius:6px; }
+.small { font-size:0.9rem; color:#666; }
+.link { color:#0066cc; text-decoration:none; }
