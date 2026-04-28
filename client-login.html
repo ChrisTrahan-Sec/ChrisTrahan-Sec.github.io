@@ -11,6 +11,19 @@
     <h2 class="qfw-title">QFW</h2>
     <h1>Client Login</h1>
     <div class="card">
+      <h3>Existing client login</h3>
+      <p>Use your credentials to sign in if you already have an account.</p>
+      <form id="loginForm">
+        <label for="loginEmail">Email</label>
+        <input id="loginEmail" name="loginEmail" type="email" required />
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required />
+
+        <button type="submit" class="button">Login</button>
+      </form>
+    </div>
+    <div class="card">
       <h3>Create an account</h3>
       <p>Fill this form and click "Request Account". We'll create it for you and email credentials.</p>
       <form id="requestForm">
@@ -52,6 +65,12 @@
       //   });
       //   if(res.ok) alert('Request sent. We will create your account and email credentials.');
       // } catch(err){ console.error(err); alert('Error sending request.'); }
+    });
+
+    const loginForm = document.getElementById('loginForm');
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Login is not yet implemented. Please contact support if you need help.');
     });
   </script>
 </body>
