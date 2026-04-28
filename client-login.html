@@ -41,8 +41,8 @@
       const body = encodeURIComponent(
         `Name: ${name}\nEmail: ${email}\nNotes: ${notes}\n\nPlease create a client account for this user.`
       );
-      // Opens user's mail app — sends to admin@qfwllc.com
-      window.location.href = `mailto:admin@qfwllc.com?subject=${subject}&body=${body}`;
+      // Opens user's mail app — sends to admin@qfwllc.com and CCs chris@qfwllc.com
+      window.location.href = `mailto:admin@qfwllc.com?cc=chris@qfwllc.com&subject=${subject}&body=${body}`;
       // -- Optional: send to backend API (uncomment when backend is ready) --
       // try {
       //   const res = await fetch('/api/request-account', {

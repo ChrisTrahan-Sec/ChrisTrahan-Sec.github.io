@@ -36,10 +36,11 @@ app.post('/api/request-account', async (req, res) => {
   arr.push(entry);
   await fs.writeJson(LOG_FILE, arr);
 
-  // send email to site owner (admin@qfwllc.com)
+  // send email to site owner (admin@qfwllc.com) and CC Chris
   const mail = {
     from: '"QFW Site" <no-reply@qfwllc.com>',
     to: 'admin@qfwllc.com',
+    cc: 'chris@qfwllc.com',
     subject: `Account request: ${name}`,
     text: `Name: ${name}\nEmail: ${email}\nNotes: ${notes}\n\nID: ${entry.id}`
   };
