@@ -74,12 +74,14 @@ async function initDatabase() {
 
   const legacyUsers = await fs.readJson(USERS_FILE).catch(() => []);
   for (const legacy of legacyUsers) {
-    const existing = await getAsync('SELECT id FROM users WHERE email = ?', [legacy.email]);
+    const existing = await getAsync('SELECT id, password FROM users WHERE lower(email) = lower(?)', [legacy.email]);
     if (!existing) {
       await runAsync(
         'INSERT INTO users (name, email, password, notes, created_at) VALUES (?, ?, ?, ?, ?)',
         [legacy.name, legacy.email, legacy.password, legacy.notes || null, legacy.created_at || new Date().toISOString()]
       );
+    } else if (!existing.password && legacy.password) {
+      await runAsync('UPDATE users SET password = ? WHERE id = ?', [legacy.password, existing.id]);
     }
   }
 }
