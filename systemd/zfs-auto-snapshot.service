@@ -1,0 +1,7 @@
+[Unit]
+Description=Run ZFS auto snapshot script
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/zfs-auto-snapshot.sh
+Nice=10
