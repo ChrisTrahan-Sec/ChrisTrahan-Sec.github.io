@@ -1,0 +1,60 @@
+version: "3.8"
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: coin_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: example_pass
+    volumes:
+      - type: bind
+        source: /tank/backend/db
+        target: /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  web:
+    image: yoursite/web:latest
+    volumes:
+      - type: bind
+        source: /tank/backend/www
+        target: /usr/share/nginx/html
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  proxy:
+    image: nginx:stable
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - type: bind
+        source: /tank/backend/www
+        target: /usr/share/nginx/html
+      - type: bind
+        source: /tank/backend/docker/nginx-conf
+        target: /etc/nginx/conf.d
+    depends_on:
+      web:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
