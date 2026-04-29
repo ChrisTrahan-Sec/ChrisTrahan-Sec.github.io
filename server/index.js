@@ -20,10 +20,14 @@ const transporter = nodemailer.createTransport({
 });
 
 const LOG_FILE = path.join(__dirname, 'requests.json');
+const USERS_FILE = path.join(__dirname, 'users.json');
 
-// Ensure log file exists
+// Ensure data files exist
 fs.ensureFileSync(LOG_FILE);
 if (!fs.readJsonSync(LOG_FILE, { throws: false })) fs.writeJsonSync(LOG_FILE, []);
+
+fs.ensureFileSync(USERS_FILE);
+if (!fs.readJsonSync(USERS_FILE, { throws: false })) fs.writeJsonSync(USERS_FILE, []);
 
 app.post('/api/request-account', async (req, res) => {
   const { name, email, notes } = req.body || {};
@@ -52,6 +56,43 @@ app.post('/api/request-account', async (req, res) => {
     }
     return res.json({ ok: true, id: entry.id });
   });
+});
+
+app.post('/api/create-user', async (req, res) => {
+  const { name, email, password, notes } = req.body || {};
+  if (!name || !email || !password) return res.status(400).json({ error: 'name, email and password required' });
+
+  const users = await fs.readJson(USERS_FILE).catch(() => []);
+  const existing = users.find((user) => user.email.toLowerCase() === email.toLowerCase());
+  if (existing) return res.status(409).json({ error: 'A user with that email already exists' });
+
+  const user = {
+    id: Date.now(),
+    name,
+    email,
+    password,
+    notes,
+    created_at: new Date().toISOString()
+  };
+
+  users.push(user);
+  await fs.writeJson(USERS_FILE, users);
+
+  return res.json({ ok: true, user: { id: user.id, name: user.name, email: user.email } });
+});
+
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body || {};
+  if (!email || !password) return res.status(400).json({ error: 'email and password required' });
+
+  const users = await fs.readJson(USERS_FILE).catch(() => []);
+  const user = users.find(
+    (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+  );
+
+  if (!user) return res.status(401).json({ error: 'Invalid email or password' });
+
+  return res.json({ ok: true, user: { id: user.id, name: user.name, email: user.email } });
 });
 
 const PORT = process.env.PORT || 3000;

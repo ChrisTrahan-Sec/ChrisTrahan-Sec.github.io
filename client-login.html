@@ -68,9 +68,29 @@
     });
 
     const loginForm = document.getElementById('loginForm');
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      alert('Login is not yet implemented. Please contact support if you need help.');
+      const email = loginForm.loginEmail.value.trim();
+      const password = loginForm.password.value;
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        if (!res.ok) {
+          const error = await res.json().catch(() => ({}));
+          return alert(error.error || 'Login failed.');
+        }
+
+        const data = await res.json();
+        alert(`Login successful. Welcome back, ${data.user.name || data.user.email}!`);
+      } catch (err) {
+        console.error(err);
+        alert('Unable to reach the server.');
+      }
     });
   </script>
 </body>
