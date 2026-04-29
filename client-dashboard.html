@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Client Dashboard — QFW</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="landing-page">
+    <h2 class="qfw-title">QFW Client Portal</h2>
+    <div class="card">
+      <h3>Welcome back</h3>
+      <p id="welcomeText">Loading your account...</p>
+      <p class="small">This is a simple client dashboard placeholder. You can add secure content here.</p>
+      <button id="logoutButton" class="button">Log out</button>
+    </div>
+    <p><a href="index.html" class="link">← Back to home</a></p>
+  </div>
+  <script>
+    const user = JSON.parse(localStorage.getItem('qfwClientUser') || 'null');
+    const welcomeText = document.getElementById('welcomeText');
+    const logoutButton = document.getElementById('logoutButton');
+
+    if (!user) {
+      window.location.href = 'client-login.html';
+    } else {
+      welcomeText.textContent = `Logged in as ${user.name || user.email}.`;
+      const inventoryLink = document.createElement('a');
+      inventoryLink.href = 'client-inventory.html';
+      inventoryLink.className = 'button';
+      inventoryLink.textContent = 'Manage inventory';
+      welcomeText.parentElement.insertBefore(inventoryLink, logoutButton);
+    }
+
+    logoutButton.addEventListener('click', () => {
+      localStorage.removeItem('qfwClientUser');
+      window.location.href = 'client-login.html';
+    });
+  </script>
+</body>
+</html>

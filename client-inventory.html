@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Client Inventory — QFW</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="landing-page">
+    <h2 class="qfw-title">Client Inventory</h2>
+    <div class="card inventory-card">
+      <div class="inventory-header">
+        <div>
+          <h3>Coin collection</h3>
+          <p class="small">Log quantity, rarity, purchase price, photos, and a fully editable description for each coin.</p>
+        </div>
+        <div>
+          <button id="logoutButton" class="button">Log out</button>
+        </div>
+      </div>
+
+      <form id="inventoryForm">
+        <input type="hidden" id="inventoryId" />
+        <div class="form-grid">
+          <label for="coinName">Coin name</label>
+          <input id="coinName" name="coinName" type="text" required />
+
+          <label for="quantity">Quantity</label>
+          <input id="quantity" name="quantity" type="number" min="1" value="1" required />
+
+          <label for="rarity">Rarity</label>
+          <input id="rarity" name="rarity" type="text" />
+
+          <label for="purchasePrice">Purchase price</label>
+          <input id="purchasePrice" name="purchasePrice" type="number" step="0.01" />
+
+          <label for="purchaseDate">Purchase date</label>
+          <input id="purchaseDate" name="purchaseDate" type="date" />
+
+          <label for="photoFile">Photo upload</label>
+          <input id="photoFile" name="photoFile" type="file" accept="image/*" />
+          <input id="photoUrl" name="photoUrl" type="hidden" />
+          <div id="photoPreview" class="photo-preview">No photo selected.</div>
+
+          <label for="notes">Description</label>
+          <textarea id="notes" name="notes" rows="4" class="full-width" placeholder="Enter one line per description item"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="button" id="saveButton">Add coin</button>
+          <button type="button" class="button secondary" id="cancelEdit" style="display:none;">Cancel edit</button>
+        </div>
+      </form>
+
+      <div id="inventorySection">
+        <table class="inventory-table">
+          <thead>
+            <tr>
+              <th>Coin</th>
+              <th>Qty</th>
+              <th>Rarity</th>
+              <th>Price</th>
+              <th>Photo</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inventoryBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <p><a href="client-dashboard.html" class="link">← Back to dashboard</a></p>
+  </div>
+
+  <div id="descriptionModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Edit Description</h3>
+        <button id="closeModal" class="button secondary">Close</button>
+      </div>
+      <p class="small">Update the coin description lines below. One line per item.</p>
+      <textarea id="modalNotes" rows="7" class="full-width"></textarea>
+      <div class="modal-actions">
+        <button id="saveDescButton" class="button">Save description</button>
+        <button id="cancelDescButton" class="button secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('qfwClientUser') || 'null');
+    if (!user) {
+      window.location.href = 'client-login.html';
+    }
+
+    const inventoryForm = document.getElementById('inventoryForm');
+    const inventoryIdInput = document.getElementById('inventoryId');
+    const photoFileInput = document.getElementById('photoFile');
+    const photoUrlInput = document.getElementById('photoUrl');
+    const photoPreview = document.getElementById('photoPreview');
+    const saveButton = document.getElementById('saveButton');
+    const cancelEditButton = document.getElementById('cancelEdit');
+    const inventoryBody = document.getElementById('inventoryBody');
+    const logoutButton = document.getElementById('logoutButton');
+    const descriptionModal = document.getElementById('descriptionModal');
+    const modalNotes = document.getElementById('modalNotes');
+    const saveDescButton = document.getElementById('saveDescButton');
+    const cancelDescButton = document.getElementById('cancelDescButton');
+    const closeModal = document.getElementById('closeModal');
+
+    let editItemId = null;
+    let editDescItemId = null;
+
+    function formatDescription(notes) {
+      if (!notes) return '-';
+      return `<ul>${notes.split('\n').filter(Boolean).map((line) => `<li>${line.trim()}</li>`).join('')}</ul>`;
+    }
+
+    function setPhotoPreview(url) {
+      if (!url) {
+        photoPreview.innerHTML = 'No photo selected.';
+        return;
+      }
+      photoPreview.innerHTML = `<img class="inventory-photo" src="${url}" alt="Selected coin photo" />`;
+    }
+
+    function openDescriptionModal(item) {
+      editDescItemId = item.id;
+      modalNotes.value = item.notes || '';
+      descriptionModal.classList.add('modal-visible');
+    }
+
+    function closeDescriptionModal() {
+      editDescItemId = null;
+      modalNotes.value = '';
+      descriptionModal.classList.remove('modal-visible');
+    }
+
+    saveDescButton.addEventListener('click', async () => {
+      if (!editDescItemId) return;
+      try {
+        const res = await fetch(`/api/inventory/${editDescItemId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id, notes: modalNotes.value.trim() })
+        });
+        if (!res.ok) {
+          const error = await res.json().catch(() => ({}));
+          return alert(error.error || 'Unable to save description.');
+        }
+        closeDescriptionModal();
+        loadInventory();
+      } catch (err) {
+        console.error(err);
+        alert('Unable to save description.');
+      }
+    });
+
+    cancelDescButton.addEventListener('click', closeDescriptionModal);
+    closeModal.addEventListener('click', closeDescriptionModal);
+
+    photoFileInput.addEventListener('change', () => {
+      const file = photoFileInput.files[0];
+      if (!file) {
+        setPhotoPreview(photoUrlInput.value.trim());
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        photoPreview.innerHTML = `<img class="inventory-photo" src="${reader.result}" alt="Selected coin photo preview" />`;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    async function uploadPhotoIfNeeded() {
+      if (!photoFileInput.files.length) {
+        return photoUrlInput.value.trim();
+      }
+      const file = photoFileInput.files[0];
+      const formData = new FormData();
+      formData.append('photo', file);
+      const res = await fetch('/api/upload-photo', {
+        method: 'POST',
+        body: formData
+      });
+      if (!res.ok) {
+        const error = await res.json().catch(() => ({}));
+        throw new Error(error.error || 'Photo upload failed');
+      }
+      const body = await res.json();
+      photoUrlInput.value = body.url;
+      return body.url;
+    }
+
+    async function loadInventory() {
+      try {
+        const res = await fetch(`/api/inventory?userId=${user.id}`);
+        const items = await res.json();
+
+        inventoryBody.innerHTML = items.map(item => `
+          <tr>
+            <td>${item.coin_name}</td>
+            <td>${item.quantity}</td>
+            <td>${item.rarity || '-'}</td>
+            <td>${item.purchase_price ? `$${item.purchase_price.toFixed(2)}` : '-'}</td>
+            <td class="photo-cell">${item.photo_url ? `<a href="${item.photo_url}" target="_blank"><img class="inventory-photo" src="${item.photo_url}" alt="${item.coin_name} photo" /></a>` : '-'}</td>
+            <td>${formatDescription(item.notes)}</td>
+            <td>
+              <button class="button small-button edit-button" data-id="${item.id}">Edit</button>
+              <button class="button small-button edit-desc-button" data-id="${item.id}">Edit desc</button>
+              <button class="button small-button delete-button" data-id="${item.id}">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+
+        document.querySelectorAll('.edit-button').forEach((button) => {
+          button.addEventListener('click', () => {
+            const id = Number(button.getAttribute('data-id'));
+            const item = items.find((entry) => entry.id === id);
+            if (!item) return;
+            editItemId = id;
+            inventoryIdInput.value = id;
+            document.getElementById('coinName').value = item.coin_name;
+            document.getElementById('quantity').value = item.quantity;
+            document.getElementById('rarity').value = item.rarity || '';
+            document.getElementById('purchasePrice').value = item.purchase_price || '';
+            document.getElementById('purchaseDate').value = item.purchase_date || '';
+            photoUrlInput.value = item.photo_url || '';
+            photoFileInput.value = '';
+            setPhotoPreview(item.photo_url || '');
+            document.getElementById('notes').value = item.notes || '';
+            saveButton.textContent = 'Save changes';
+            cancelEditButton.style.display = 'inline-block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        });
+
+        document.querySelectorAll('.edit-desc-button').forEach((button) => {
+          button.addEventListener('click', () => {
+            const id = Number(button.getAttribute('data-id'));
+            const item = items.find((entry) => entry.id === id);
+            if (!item) return;
+            openDescriptionModal(item);
+          });
+        });
+
+        document.querySelectorAll('.delete-button').forEach((button) => {
+          button.addEventListener('click', async () => {
+            const id = button.getAttribute('data-id');
+            await fetch(`/api/inventory/${id}?userId=${user.id}`, { method: 'DELETE' });
+            if (editItemId === Number(id)) resetForm();
+            loadInventory();
+          });
+        });
+      } catch (err) {
+        console.error(err);
+        inventoryBody.innerHTML = '<tr><td colspan="7">Unable to load inventory.</td></tr>';
+      }
+    }
+
+    function resetForm() {
+      editItemId = null;
+      inventoryIdInput.value = '';
+      inventoryForm.reset();
+      photoUrlInput.value = '';
+      setPhotoPreview('');
+      saveButton.textContent = 'Add coin';
+      cancelEditButton.style.display = 'none';
+    }
+
+    inventoryForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      try {
+        const uploadedPhotoUrl = await uploadPhotoIfNeeded();
+        const data = {
+          userId: user.id,
+          coin_name: document.getElementById('coinName').value.trim(),
+          quantity: document.getElementById('quantity').value,
+          rarity: document.getElementById('rarity').value.trim(),
+          purchase_price: document.getElementById('purchasePrice').value,
+          purchase_date: document.getElementById('purchaseDate').value,
+          photo_url: uploadedPhotoUrl || photoUrlInput.value.trim(),
+          notes: document.getElementById('notes').value.trim()
+        };
+
+        const method = editItemId ? 'PUT' : 'POST';
+        const url = editItemId ? `/api/inventory/${editItemId}` : '/api/inventory';
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (!res.ok) {
+          const error = await res.json().catch(() => ({}));
+          return alert(error.error || 'Unable to save inventory item.');
+        }
+
+        resetForm();
+        loadInventory();
+      } catch (err) {
+        console.error(err);
+        alert(err.message || 'Unable to save item.');
+      }
+    });
+
+    cancelEditButton.addEventListener('click', resetForm);
+
+    logoutButton.addEventListener('click', () => {
+      localStorage.removeItem('qfwClientUser');
+      window.location.href = 'client-login.html';
+    });
+
+    loadInventory();
+  </script>
+</body>
+</html>

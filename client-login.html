@@ -86,7 +86,8 @@
         }
 
         const data = await res.json();
-        alert(`Login successful. Welcome back, ${data.user.name || data.user.email}!`);
+        localStorage.setItem('qfwClientUser', JSON.stringify(data.user));
+        window.location.href = 'client-dashboard.html';
       } catch (err) {
         console.error(err);
         alert('Unable to reach the server.');

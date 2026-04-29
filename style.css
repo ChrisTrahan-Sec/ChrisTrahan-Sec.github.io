@@ -166,3 +166,65 @@ label { display:block; margin-top:12px; font-weight:600; }
 input, textarea { width:100%; padding:8px; margin-top:6px; border:1px solid #ccc; border-radius:6px; }
 .small { font-size:0.9rem; color:#666; }
 .link { color:#0066cc; text-decoration:none; }
+.inventory-header { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; }
+.inventory-table { width:100%; border-collapse:collapse; margin-top:20px; }
+.inventory-table th, .inventory-table td { border:1px solid #ccc; padding:10px; text-align:left; background:#fff; color:#111; vertical-align:top; }
+.inventory-table th { background:#f3f6fb; }
+.inventory-table td a { color:#0066cc; text-decoration:none; }
+.inventory-photo { display:block; max-width:80px; max-height:80px; object-fit:cover; border-radius:6px; }
+.photo-preview { margin-top:8px; min-height:90px; display:flex; align-items:center; justify-content:center; border:1px solid #ccc; border-radius:8px; background:#f7f9fc; padding:10px; color:#444; }
+.small-button { font-size:0.9rem; padding:8px 12px; margin:0 4px 4px 0; }
+.form-grid { display:grid; gap:12px; grid-template-columns:1fr 1fr; }
+.form-grid label { margin-top:0; }
+.form-grid .full-width { grid-column:1 / -1; }
+.form-actions { display:flex; gap:12px; align-items:center; margin-top:16px; }
+.button.secondary { background:#777; }
+.inventory-table ul { margin:0; padding-left:18px; color:#111; }
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.55);
+  z-index: 1000;
+  padding: 20px;
+}
+.modal-visible {
+  display: flex;
+}
+.modal-content {
+  width: 100%;
+  max-width: 620px;
+  background: white;
+  color: #111;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  padding: 24px;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+.modal-content textarea {
+  width: 100%;
+  min-height: 180px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: vertical;
+}
+@media (max-width: 720px) {
+  .form-grid { grid-template-columns:1fr; }
+  .inventory-header { flex-direction:column; align-items:stretch; }
+  .modal-content { padding: 18px; }
+}
