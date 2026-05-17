@@ -13,8 +13,41 @@
         <div class="button-container">
             <a href="business.html" class="button">Business Solutions</a>
             <a href="consumer.html" class="button">Consumer Solutions</a>
-            <a href="client-login.html" class="button client-cta">Client login / Create account</a>
+            <a href="#client-inquiry" class="button client-cta">Client inquiry</a>
         </div>
     </div>
+    <section id="client-inquiry" class="landing-page">
+        <h2>Client Inquiry</h2>
+        <p>Use this form to submit a service inquiry directly from the home page.</p>
+        <div class="card">
+            <form action="send_email.php" method="POST">
+                <input type="hidden" name="form_type" value="service_inquiry">
+
+                <label for="full_name">Full Name:</label>
+                <input id="full_name" name="full_name" type="text" required>
+
+                <label for="email">Email:</label>
+                <input id="email" name="email" type="email" required>
+
+                <label for="phone">Phone Number (optional):</label>
+                <input id="phone" name="phone" type="tel" placeholder="123-456-7890">
+
+                <label for="services">Services Requested:</label>
+                <select id="services" name="services" required>
+                    <option value="">Select a service</option>
+                    <option value="service1">Service 1</option>
+                    <option value="service2">Service 2</option>
+                    <option value="service3">Service 3</option>
+                </select>
+
+                <label>Preferred Contact Method:</label>
+                <label><input type="checkbox" name="contact_method[]" value="Email"> Email</label>
+                <label><input type="checkbox" name="contact_method[]" value="Phone"> Phone</label>
+                <label><input type="checkbox" name="contact_method[]" value="Text message"> Text message</label>
+
+                <button type="submit" class="button">Submit Inquiry</button>
+            </form>
+        </div>
+    </section>
 </body>
 </html>
