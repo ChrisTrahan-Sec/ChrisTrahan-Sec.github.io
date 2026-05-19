@@ -10,6 +10,7 @@ const cors = require('cors');
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '..')));
 
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
@@ -115,6 +116,33 @@ app.post('/api/request-account', async (req, res) => {
       return res.status(500).json({ error: 'Failed to send email' });
     }
     return res.json({ ok: true, id: entry.id });
+  });
+});
+
+app.post('/api/service-inquiry', async (req, res) => {
+  const { full_name, email, phone, services, contact_method } = req.body || {};
+  const preferredContact = Array.isArray(contact_method) ? contact_method : contact_method ? [contact_method] : [];
+  const name = String(full_name || '').trim();
+  const senderEmail = String(email || '').trim();
+  const serviceDetails = String(services || '').trim();
+
+  if (!name || !serviceDetails || !senderEmail.match(/^[^@\s]+@[^@\s]+\.[^@\s]+$/)) {
+    return res.status(400).json({ error: 'Full name, valid email, and services requested are required' });
+  }
+
+  const mail = {
+    from: `"QFW Service Inquiry" <no-reply@qfwllc.com>`,
+    to: 'chris@qfwllc.com',
+    subject: 'qfw service inquiry',
+    text: `Full Name: ${name}\nEmail: ${senderEmail}\nPhone: ${phone || 'Not provided'}\nPreferred Contact Method: ${preferredContact.length ? preferredContact.join(', ') : 'None selected'}\n\nServices Requested:\n${serviceDetails}`
+  };
+
+  transporter.sendMail(mail, (err) => {
+    if (err) {
+      console.error('Service inquiry mail error', err);
+      return res.status(500).json({ error: 'Failed to send inquiry email' });
+    }
+    return res.json({ ok: true, message: 'Inquiry sent successfully' });
   });
 });
 
