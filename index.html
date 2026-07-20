@@ -1,48 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Our Services</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="landing-page">
-        <h2 class="qfw-title">QFW</h2>
-        <h1>Welcome to Our Services</h1>
-        <div class="button-container">
-            <a href="business.html" class="button">Business Solutions</a>
-            <a href="consumer.html" class="button">Consumer Solutions</a>
-            <a href="#client-inquiry" class="button client-cta">Client inquiry</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quality Fabricating & Welding</title>
+    <meta
+      name="description"
+      content="Precision welding, fabrication, and industrial demolition services for General Contractors and B2B clients."
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero-header">
+        <div class="logo-wrap">
+          <img src="logo.png" alt="Quality Fabricating & Welding Logo" class="company-logo" />
         </div>
+        <div class="hero-tagline">
+          Quality Welding, Fabrication, Demo, Restoration, and Repair Services
+        </div>
+      </header>
+
+      <main>
+        <section class="panel intro-panel">
+          <div class="panel-copy">
+            <p class="eyebrow">Industrial Capability</p>
+            <h1>Precision-built support for demanding commercial and structural projects.</h1>
+            <p>
+              We deliver disciplined execution for General Contractors and B2B clients who need a dependable
+              partner for heavy fabrication, controlled teardown, and high-integrity repair work.
+            </p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="section-heading">
+            <p class="eyebrow">Structural Teardown & Industrial Demolition</p>
+            <h2>Controlled dismantling, precision cutting, and efficient structural removal.</h2>
+          </div>
+          <div class="photo-grid">
+            <img src="demo1.jpg.jpg" alt="Industrial demolition work" />
+            <img src="demo2.jpg.jpg" alt="Structural teardown site" />
+            <img src="demo3.jpg.jpg" alt="Overhead steel dismantling" />
+            <img src="demo4.jpg.jpg" alt="Commercial demolition support" />
+            <img src="demo5.jpg.jpg" alt="Structural removal work" />
+          </div>
+          <p class="section-text">
+            Our team executes safe, controlled overhead structural steel teardowns, precision torch cutting,
+            custom rigging, and commercial space remodeling with strict site safety protocols and hyper-efficient
+            structural dismantling practices.
+          </p>
+        </section>
+
+        <section class="panel">
+          <div class="section-heading">
+            <p class="eyebrow">Certified Weld Quality Showcase</p>
+            <h2>Multi-process weld capability built for structural integrity and inspection readiness.</h2>
+          </div>
+          <div class="image-row">
+            <img src="weld1.jpg.jpg" alt="Field weld detail" />
+            <img src="weld2.jpg.jpg" alt="Welding fabrication work" />
+            <img src="weld3.jpg.jpg" alt="Industrial welding join" />
+            <img src="weld4.jpg.jpg" alt="Structural weld finish" />
+          </div>
+          <p class="section-text">
+            We deliver precision with Pulse MIG, Dual Shield Flux Core, and Solid Core MIG processes. Our
+            Navy-grade defense manufacturing background from the Austal USA / Electric Boat focus factory in
+            Mobile, Alabama means every bead is laid with flawless consistency and built to pass strict X-ray
+            and structural inspection standards.
+          </p>
+        </section>
+
+        <section class="panel">
+          <div class="section-heading">
+            <p class="eyebrow">Commercial Equipment & Mobile Trailer Repair</p>
+            <h2>Heavy-duty repairs and custom fabrication with efficient resourcefulness.</h2>
+          </div>
+          <div class="feature-layout">
+            <img src="trailer.jpg.jpg" alt="Utility Trailer Restoration" class="feature-image" />
+            <div class="feature-copy">
+              <p>
+                We provide heavy utility trailer rebuilds, commercial equipment repairs, and custom attachment
+                fabrication designed for durability and cost control.
+              </p>
+              <p>
+                Our approach includes full structural restorations engineered cleanly with salvaged industrial
+                components to meet hyper-efficient budgets without sacrificing quality.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel directory-panel">
+          <div class="section-heading">
+            <p class="eyebrow">Contact Directory</p>
+            <h2>Direct access for procurement, fabrication, and operations support.</h2>
+          </div>
+          <div class="contact-list">
+            <div class="contact-card">
+              <h3>Business & Contracting</h3>
+              <p>For GCs, B2B clients, or procurement officers seeking quotes and bidding services.</p>
+              <a href="mailto:procurement@qfwllc.com">procurement@qfwllc.com</a>
+            </div>
+            <div class="contact-card">
+              <h3>Custom Fabrication & Public Services</h3>
+              <p>For custom fab builds, private restorations, or services for non-business public entities.</p>
+              <a href="mailto:sales@qfwllc.com">sales@qfwllc.com</a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="footer-card">
+          <h3>Warranty Support</h3>
+          <p>For issues or repair requests on services already rendered.</p>
+          <a href="mailto:support@qfwllc.com">support@qfwllc.com</a>
+        </div>
+        <div class="footer-card">
+          <h3>Site Operations</h3>
+          <p>For website technical issues.</p>
+          <a href="mailto:admin@qfwllc.com">admin@qfwllc.com</a>
+        </div>
+      </footer>
     </div>
-    <section id="client-inquiry" class="landing-page">
-        <h2>Client Inquiry</h2>
-        <p>Use this form to submit a service inquiry directly from the home page.</p>
-        <div class="card">
-            <form action="/api/service-inquiry" method="POST">
-                <input type="hidden" name="form_type" value="service_inquiry">
-
-                <label for="full_name">Full Name:</label>
-                <input id="full_name" name="full_name" type="text" required>
-
-                <label for="email">Email:</label>
-                <input id="email" name="email" type="email" required>
-
-                <label for="phone">Phone Number (optional):</label>
-                <input id="phone" name="phone" type="tel" placeholder="123-456-7890">
-
-                <label for="services">Services Requested:</label>
-                <textarea id="services" name="services" rows="4" required placeholder="Describe the services you need"></textarea>
-
-                <label>Preferred Contact Method:</label>
-                <label><input type="checkbox" name="contact_method[]" value="Email"> Email</label>
-                <label><input type="checkbox" name="contact_method[]" value="Phone"> Phone</label>
-                <label><input type="checkbox" name="contact_method[]" value="Text message"> Text message</label>
-
-                <button type="submit" class="button">Submit Inquiry</button>
-            </form>
-        </div>
-    </section>
-</body>
+  </body>
 </html>
