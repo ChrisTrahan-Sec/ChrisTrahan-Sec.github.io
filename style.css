@@ -171,6 +171,14 @@ h2 {
   background: rgba(255, 255, 255, 0.04);
 }
 
+.contact-card--full {
+  grid-column: 1 / -1;
+  text-align: center;
+  max-width: 560px;
+  justify-self: center;
+  width: 100%;
+}
+
 .contact-card a,
 .footer-card a {
   display: inline-block;
